@@ -9,9 +9,9 @@ st.title("🧠 BDSS Tutor – Powered by LLaMA 3.2")
 
 @st.cache_resource
 def load_model():
-    base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B", device_map="auto")
-    model = PeftModel.from_pretrained(base_model, "llama32-3b-mcq-adapter")
-    tokenizer = AutoTokenizer.from_pretrained("llama32-3b-mcq-adapter")
+    model_path = "./llama32-3b-mcq-adapter"  # your local model folder
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, local_files_only=True)
+    model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True, local_files_only=True)
     return tokenizer, model
 
 tokenizer, model = load_model()
