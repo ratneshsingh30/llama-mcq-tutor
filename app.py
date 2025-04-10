@@ -2,25 +2,26 @@
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+from peft import PeftModel
 
-st.set_page_config(page_title="BDSS Explainer", layout="wide")
-st.title("BDSS Tutor 🧠📘 (LLaMA 3.2 Fine-Tuned)")
+st.set_page_config(page_title="BDSS MCQ Explainer", layout="centered")
+st.title("🧠 BDSS Tutor – Powered by LLaMA 3.2")
 
 @st.cache_resource
 def load_model():
-    model_path = "./llama32-3b-mcq-adapter"
-    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True, torch_dtype=torch.float16, device_map="auto")
+    base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B", device_map="auto")
+    model = PeftModel.from_pretrained(base_model, "llama32-3b-mcq-adapter")
+    tokenizer = AutoTokenizer.from_pretrained("llama32-3b-mcq-adapter")
     return tokenizer, model
 
 tokenizer, model = load_model()
 
-prompt = st.text_area("📥 Enter a BDSS-style MCQ with options (or paste question text):", height=300)
+mcq_input = st.text_area("Paste your MCQ with options below:", height=300)
 
-if st.button("🧪 Generate Explanation + Answer"):
-    with st.spinner("Generating..."):
-        input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(model.device)
-        output = model.generate(input_ids, max_new_tokens=300)
-        result = tokenizer.decode(output[0], skip_special_tokens=True)
-        st.markdown("### 📌 Explanation + Answer")
-        st.success(result)
+if st.button("Explain & Answer"):
+    with st.spinner("Thinking..."):
+        prompt = f"Explain and answer the following MCQ with reasoning:\n\n{mcq_input}\n\nEnd with 'Correct Option: X'"
+        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        outputs = model.generate(**inputs, max_new_tokens=300)
+        result = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        st.markdown(result.replace("\n", "<br>"), unsafe_allow_html=True)

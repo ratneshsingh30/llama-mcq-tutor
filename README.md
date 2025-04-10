@@ -1,13 +1,29 @@
-# llama-mcq-tutor
-# LLaMA MCQ Tutor
 
-This app lets you upload notes, documents, or screenshots and uses a fine-tuned LLaMA model to solve and explain multiple-choice questions (MCQs).
+# 🧠 LLaMA 3.2 BDSS MCQ Tutor (Streamlit)
 
-## How to Run
+This app fine-tunes Meta's LLaMA 3.2 on 10,000 BDSS-style MCQs and explains them.
 
-Upload your `.pdf`, `.docx`, `.pptx`, `.txt`, `.png`, or `.jpg` files.
-The model will extract text, identify MCQs, and highlight the correct answer with explanations.
+## ✅ How to Deploy on Streamlit Cloud
 
-## Dependencies
+1. Clone or upload this repo to GitHub.
+2. Go to [streamlit.io/cloud](https://streamlit.io/cloud) and deploy the repo.
+3. Make sure this directory includes:
+   - app.py
+   - requirements.txt
+   - llama32-3b-mcq-adapter/ (with adapter_model.safetensors + tokenizer)
 
-See `requirements.txt` for setup.
+Enjoy smart MCQ explanations with minimal infra!
+
+## Sample Usage
+> Paste:
+```
+Which heuristic is being used when individuals rely on immediate examples that come to mind?
+
+A. Representativeness  
+B. Anchoring  
+C. Availability  
+D. Framing  
+```
+
+> Output:
+Full explanation followed by **Correct Option: C**
