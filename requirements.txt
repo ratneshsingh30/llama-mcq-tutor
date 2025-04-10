@@ -1,6 +1,8 @@
-
 streamlit
 transformers
 torch
 peft
 accelerate
+sentencepiece         # 👈 Required for LLaMA tokenizer.model
+tiktoken              # 👈 Optional but improves tokenizer support for LLaMA
+huggingface_hub       # 👈 For downloading from HF and auth
